@@ -78,8 +78,10 @@ export const ChangeParamsModal = ({ shortName, poolDefParams, supportedValue, go
     let transformedValue = supportedValue;
     if (isPercentage && supportedValue !== undefined) {
       transformedValue = supportedValue * 100
-    } if (name === "mid_price"){
-      transformedValue = +Number(supportedValue / 10 ** mid_price_decimals).toPrecision(6);
+    } else if (name === "mid_price") {
+      transformedValue = supportedValue !== undefined 
+        ? +Number(supportedValue / 10 ** mid_price_decimals).toPrecision(6) 
+        : "";
     } else {
       transformedValue = supportedValue
     }
@@ -206,7 +208,7 @@ export const ChangeParamsModal = ({ shortName, poolDefParams, supportedValue, go
           {showPriceRange && <Paragraph>
             <Text>Price range from {p_min} to {p_max} {y_symbol} for 1 {x_symbol}</Text>
           </Paragraph>}
-          
+
           {balance !== 0 && balance !== "0" ? <Text type="secondary">Add more funds (optional):</Text> : <Text type="secondary">Amount to vote with</Text>}
           <Form.Item>
             <Input
