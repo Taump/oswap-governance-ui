@@ -77,8 +77,8 @@ export const ChangeParamsModal = ({ shortName, poolDefParams, supportedValue, go
   useEffect(() => {
     let transformedValue = supportedValue;
     if (isPercentage && supportedValue !== undefined) {
-      transformedValue = supportedValue * 100
-    } if (name === "mid_price"){
+      transformedValue = Number(supportedValue) * 100
+    } else if (name === "mid_price"){
       transformedValue = +Number(supportedValue / 10 ** mid_price_decimals).toPrecision(6);
     } else {
       transformedValue = supportedValue
