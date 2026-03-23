@@ -13,12 +13,24 @@ export const loadPools = createAsyncThunk(
     // load pools
     const isBot = botCheck();
 
-    let stateVars = {};
+    const factoryAddresses = process.env.REACT_APP_FACTORY_AA
+      .split(",")
+      .map(addr => addr.trim())
+      .filter(Boolean);
 
-    if (isBot) {
-      stateVars = await http.getStateVars(process.env.REACT_APP_FACTORY_AA);
-    } else {
-      stateVars = await client.api.getAaStateVars({ address: process.env.REACT_APP_FACTORY_AA });
+    const factoryResults = await Promise.all(
+      factoryAddresses.map(factoryAddr => {
+        if (isBot) {
+          return http.getStateVars(factoryAddr);
+        } else {
+          return client.api.getAaStateVars({ address: factoryAddr });
+        }
+      })
+    );
+
+    let stateVars = {};
+    for (const result of factoryResults) {
+      Object.assign(stateVars, result);
     }
 
     // get token registry AA
@@ -40,6 +52,7 @@ export const loadPools = createAsyncThunk(
     });
 
     Object.keys(stateVars).forEach(name => {
+      if (!name.startsWith("pool_")) return;
       const address = name.split("_")[1];
       const params = stateVars[name];
 
