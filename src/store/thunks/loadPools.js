@@ -13,7 +13,7 @@ export const loadPools = createAsyncThunk(
     // load pools
     const isBot = botCheck();
 
-    const factoryAddresses = process.env.REACT_APP_FACTORY_AA
+    const factoryAddresses = process.env.REACT_APP_FACTORY_AAS
       .split(",")
       .map(addr => addr.trim())
       .filter(Boolean);
